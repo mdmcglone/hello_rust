@@ -11,24 +11,23 @@ fn main() {
         .read_line(&mut input)
         .expect("Failed to read line");
 
-        // let input = "45c";
+        input = input.trim().to_string();
 
-        let reversed: String = input.chars().rev().collect();
+        let (temp, units) = format(&input);
 
-        let (mut units, temp_rev) = reversed.split_at(2);
+        if temp == "Error" {
+            println!("cannot parse input. Try again!");
+            continue
+        }
 
-        units = units.trim();
-
-        let temp_rerev: String = temp_rev.chars().rev().collect();
-
-        let temp: f32 = match temp_rerev.trim().parse() {
-            Ok(flt) => flt,
+        // parse temp to f32
+        let temp: f32 = match temp.trim().parse() {
+            Ok(num) => num,
             Err(_) => {
-                println!("not a number. Try again!");
+                println!("cannot parse temperature. Try again!");
                 continue
             }
         };
-        
         
         if units.contains("f") || units.contains("F") {
             let conversion = f_to_c(temp);
@@ -44,22 +43,6 @@ fn main() {
         }
     }
 
-    // let numbers = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth"];
-
-    // let events = ["a partridge in a pear tree", "two turtle doves", "three french hens", "four calling birds", "five golden rings", "six geese a-laying", "seven swans a-swimming", "eight maids a-milking", "nine ladies dancing", "ten lords a-leaping", "eleven pipers piping", "twelve drummers drumming"];
-
-    // let mut count = 0;
-    // while count < 12 {
-        
-    //     for i in (0..=count).rev() {
-    //         println!("on the {} day of christmas my true love gave to me, {}", numbers[i], events[i]);
-    //     }
-    
-    // println!("\n");
-
-    // count += 1
-
-    // }
 
 }
 
@@ -72,3 +55,20 @@ fn c_to_f(temp: f32) -> f32 {
     (9.0 * temp / 5.0) + 32.0
 
 }
+
+
+
+fn format(s: &str) -> (&str, &str) {
+    let bytes = s.as_bytes();
+
+    for (i, &item) in bytes.iter().enumerate() {
+        if item == b'c' || item == b'C' || item == b'f' || item == b'F' {
+            return (&s[..i], &s[i..]);
+        }
+    }
+
+    // else, return error
+    return ("Error", "units not found");
+
+}            
+
