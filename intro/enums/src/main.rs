@@ -11,13 +11,26 @@ fn main() {
 
     let alaska_q = Coin::Quarter(USstate::Alaska);
 
-    value_in_cents(alaska_q);
+    value_in_cents(&alaska_q);
 
     let five = Some(5);
     let six = plusone(five);
     println!("{:?}", six);
     let no = plusone(None);
     println!("{:?}", no);
+
+    let confmax = Some(4);
+    if let Some(max) = confmax {
+        println!("confmax is {:?}", confmax);
+    }
+
+    let mut count = 0;
+
+    if let Coin::Quarter(state) = alaska_q {
+        println!("state is {:?}", state);
+    } else {
+        count += 1;
+    }
 
 }
 
@@ -43,7 +56,7 @@ enum Coin {
     Quarter(USstate),
 }
 
-fn value_in_cents(coin: Coin) -> u8 {
+fn value_in_cents(coin: &Coin) -> u8 {
     match coin {
         Coin::Penny => 1,
         Coin::Nickel => 5,
